@@ -4,12 +4,14 @@
 }
 
 <div class="bg-secondary bg-opacity-10 py-2 mb-5">
-    <div class="container">
+    <div class="container mb-5">
         <h1>Edit Blog Post</h1>
     </div>
 </div>
 
-@if (Model.BlogPost != null)
+<partial name="_Notification"></partial>
+
+@if (Model.blogPost != null)
 {
 
     <div>
@@ -17,41 +19,41 @@
             <form method="post">
                 <div class="mb-3">
                     <label for="heading" class="form-label">Id</label>
-                    <input type="text" class="form-control" id="id" asp-for="BlogPost.Id" readonly required>
+                    <input type="text" class="form-control" id="id" asp-for="blogPost.Id" readonly required>
 
                 </div>
 
                 <div class="mb-3">
                     <label for="heading" class="form-label">Heading</label>
-                    <input type="text" class="form-control" id="heading" asp-for="BlogPost.Heading" required>
+                    <input type="text" class="form-control" id="heading" asp-for="blogPost.Heading" required>
 
                 </div>
 
                 <div class="mb-3">
                     <label for="pageTitle" class="form-label">Page Title</label>
-                    <input type="text" class="form-control" id="pageTitle" asp-for="BlogPost.PageTitle" required>
+                    <input type="text" class="form-control" id="pageTitle" asp-for="blogPost.PageTitle" required>
 
                 </div>
 
                 <div class="mb-3">
                     <label for="content" class="form-label">Content</label>
-                    <textarea class="form-control" id="content" asp-for="BlogPost.Content" required></textarea>
+                    <textarea class="form-control" id="content" asp-for="blogPost.Content" required></textarea>
 
                 </div>
 
                 <div class="mb-3">
                     <label for="shortDescription" class="form-label">Short Description</label>
-                    <input type="text" class="form-control" id="shortDescription" asp-for="BlogPost.ShortDescription" required>
+                    <input type="text" class="form-control" id="shortDescription" asp-for="blogPost.ShortDescription" required>
 
                 </div>
 
                 <div class="mb-3">
                     <label for="featuredImageUpload" class="form-label">Featured Image Upload</label>
-                    <input type="text" id="featuredImageUpload" asp-for="BlogPost.FeaturedImageUrl" />
+                    <input type="text" id="featuredImageUpload" asp-for="blogPost.FeaturedImageUrl" />
 
-                    @if (Model.BlogPost.FeaturedImageUrl != null)
+                    @if (Model.blogPost.FeaturedImageUrl != null)
                     {
-                        <img src="@Model.BlogPost.FeaturedImageUrl" id="featuredImageDisplay" style="width:300px;" />
+                        <img src="@Model.blogPost.FeaturedImageUrl" id="featuredImageDisplay" style="width:300px;" />
                     }
                     else
                     {
@@ -61,31 +63,31 @@
 
                 <div class="mb-3">
                     <label for="featuredImageUrl" class="form-label">Featured Image Url</label>
-                    <input type="text" class="form-control" id="featuredImageUrl" asp-for="BlogPost.FeaturedImageUrl" required>
+                    <input type="text" class="form-control" id="featuredImageUrl" asp-for="blogPost.FeaturedImageUrl" required>
 
                 </div>
 
                 <div class="mb-3">
                     <label for="urlHandle" class="form-label">Url Handle</label>
-                    <input type="text" class="form-control" id="urlHandle" asp-for="BlogPost.UrlHandle" required>
+                    <input type="text" class="form-control" id="urlHandle" asp-for="blogPost.UrlHandle" required>
 
                 </div>
 
                 <div class="mb-3">
                     <label for="publishedDate" class="form-label">Published Date</label>
-                    <input type="date" class="form-control" id="publishedDate" asp-for="BlogPost.PublishedDate" required>
+                    <input type="date" class="form-control" id="publishedDate" asp-for="blogPost.PublishedDate" required>
 
                 </div>
 
                 <div class="mb-3">
                     <label for="author" class="form-label">Author</label>
-                    <input type="text" class="form-control" id="author" asp-for="BlogPost.Author" required>
+                    <input type="text" class="form-control" id="author" asp-for="blogPost.Author" required>
 
                 </div>
 
 
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="isVisible" asp-for="BlogPost.Visible">
+                    <input class="form-check-input" type="checkbox" id="isVisible" asp-for="blogPost.Visible">
                     <label class="form-check-label" for="isVisible">
                         Is Visible
                     </label>

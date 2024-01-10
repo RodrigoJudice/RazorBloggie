@@ -1,66 +1,71 @@
-using Bloggie.Web.Data;
+using Bloggie.Web.Enums;
 using Bloggie.Web.Models.Mapper;
 using Bloggie.Web.Models.ViewModels;
+using Bloggie.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
-namespace Bloggie.Web.Pages.Admin.Blogs
+namespace Bloggie.Web.Pages.Admin.Blogs;
+
+public class EditModel : PageModel
 {
-    public class EditModel : PageModel
+    private readonly IBlogPostRepository _blogPostRepository;
+
+    [BindProperty]
+    public EditBlogPostRequest blogPost { get; set; }
+
+    public EditModel(IBlogPostRepository blogPostRepository)
     {
-        private readonly BloggieDbContext _context;
-
-        [BindProperty]
-        public EditBlogPostRequest BlogPost { get; set; }
-
-        public EditModel(BloggieDbContext context)
+        _blogPostRepository = blogPostRepository;
+    }
+    public async Task OnGet(Guid id)
+    {
+        var blogPostDomainModel = await _blogPostRepository.GetAsync(id);
+        if (blogPostDomainModel != null)
         {
-            _context = context;
+            blogPost = (new BlogMapper()).BlogPostToEditBlogPostRequest(blogPostDomainModel);
         }
-        public async Task OnGet(Guid id)
-        {
-            var blogPostDomainModel = await _context.BlogPosts.FindAsync(id);
-            if (blogPostDomainModel != null)
-            {
-
-                BlogPost = (new BlogMapper()).BlogPostToEditBlogPostRequest(blogPostDomainModel);
-            }
-
-        }
-
-        public async Task<IActionResult> OnPostEdit()
-        {
-            var blogPostDomainModel = await _context.BlogPosts
-                .AsNoTracking().FirstOrDefaultAsync(b => b.Id == BlogPost.Id);
-
-            if (blogPostDomainModel != null)
-            {
-                var post = (new BlogMapper()).EditBlogPostRequestToBlogPost(BlogPost);
-                _context.BlogPosts.Update(post);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToPage("/Admin/Blogs/List");
-
-        }
-
-        public async Task<IActionResult> OnPostDelete()
-        {
-            var blogPosted = await _context.BlogPosts.FindAsync(BlogPost.Id);
-            if (blogPosted != null)
-            {
-                _context.BlogPosts.Remove(blogPosted);
-                await _context.SaveChangesAsync();
-
-                return RedirectToPage("/Admin/Blogs/List");
-            }
-
-            return Page();
-        }
-
-
-
 
     }
+
+    public async Task<IActionResult> OnPostEdit()
+    {
+
+        var updated = await _blogPostRepository.UpdateAsync(blogPost);
+        if (updated != null)
+        {
+            var notification = new Notification()
+            {
+                Message = "Blog Post Updated Successfully",
+                Type = NotificationType.Success
+
+            };
+            TempData["Notification"] = JsonSerializer.Serialize(notification);
+
+            return RedirectToPage("/Admin/Blogs/List");
+        }
+        return Page();
+
+    }
+
+    public async Task<IActionResult> OnPostDelete()
+    {
+        var deleted = await _blogPostRepository.DeleteAsync(blogPost.Id);
+        if (deleted)
+        {
+            var notification = new Notification
+            {
+                Type = Enums.NotificationType.Success,
+                Message = "Blog was deleted successfully!"
+            };
+
+            TempData["Notification"] = JsonSerializer.Serialize(notification);
+
+            return RedirectToPage("/Admin/Blogs/List");
+        }
+
+        return Page();
+    }
+
 }

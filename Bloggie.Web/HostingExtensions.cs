@@ -1,4 +1,5 @@
 ﻿using Bloggie.Web.Data;
+using Bloggie.Web.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bloggie.Web;
@@ -17,6 +18,7 @@ internal static class HostingExtensions
             options => options.UseNpgsql(configuration.GetConnectionString("Bloggie")
         ));
 
+        builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
 
         return builder.Build();
 

@@ -1,22 +1,23 @@
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-using Bloggie.Web.Data;
 using Bloggie.Web.Models.Mapper;
 using Bloggie.Web.Models.ViewModels;
+using Bloggie.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 
 namespace Bloggie.Web.Pages.Admin.Blogs;
 
 public class AddModel : PageModel
 {
-    private readonly BloggieDbContext _context;
+    private readonly IBlogPostRepository _blogPostRepository;
 
     [BindProperty]
     public AddBlogPost AddBlogPostRequest { get; set; }
 
-    public AddModel(BloggieDbContext context)
+    public AddModel(IBlogPostRepository blogPostRepository)
     {
-        _context = context;
+        _blogPostRepository = blogPostRepository;
 
     }
 
@@ -29,8 +30,16 @@ public class AddModel : PageModel
 
         var post = (new BlogMapper()).AddBlogPostRequestToBlogPost(AddBlogPostRequest);
 
-        _context.BlogPosts.Add(post);
-        await _context.SaveChangesAsync();
+        await _blogPostRepository.AddAsync(post);
+
+        var notification = new Notification
+        {
+            Type = Enums.NotificationType.Success,
+            Message = "New blog created!"
+        };
+
+        TempData["Notification"] = JsonSerializer.Serialize(notification);
+
 
         return RedirectToPage("/Admin/Blogs/List");
 
