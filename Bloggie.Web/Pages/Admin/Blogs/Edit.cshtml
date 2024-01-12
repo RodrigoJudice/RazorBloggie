@@ -44,13 +44,11 @@
                 <div class="mb-3">
                     <label for="shortDescription" class="form-label">Short Description</label>
                     <input type="text" class="form-control" id="shortDescription" asp-for="blogPost.ShortDescription" required>
-
                 </div>
 
                 <div class="mb-3">
                     <label for="featuredImageUpload" class="form-label">Featured Image Upload</label>
                     <input type="text" id="featuredImageUpload" asp-for="blogPost.FeaturedImageUrl" />
-
                     @if (Model.blogPost.FeaturedImageUrl != null)
                     {
                         <img src="@Model.blogPost.FeaturedImageUrl" id="featuredImageDisplay" style="width:300px;" />
@@ -107,4 +105,10 @@ else
     <div class="container">
         <p>Blog Post Not Found!</p>
     </div>
+}
+
+@section Scripts {
+    <script>
+        var editor = new FroalaEditor('#content');
+    </script>
 }

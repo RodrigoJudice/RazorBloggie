@@ -2,15 +2,18 @@
 using Bloggie.Web.Models.Mapper;
 using Bloggie.Web.Models.ViewModels;
 using Bloggie.Web.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 
 namespace Bloggie.Web.Pages.Admin.Blogs;
 
+[Authorize(Roles = "Admin")]
 public class AddModel : PageModel
 {
     private readonly IBlogPostRepository _blogPostRepository;
+
 
     [BindProperty]
     public AddBlogPost AddBlogPostRequest { get; set; }

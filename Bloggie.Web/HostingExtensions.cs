@@ -1,5 +1,6 @@
 ﻿using Bloggie.Web.Data;
 using Bloggie.Web.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bloggie.Web;
@@ -17,6 +18,27 @@ internal static class HostingExtensions
         builder.Services.AddDbContext<BloggieDbContext>(
             options => options.UseNpgsql(configuration.GetConnectionString("Bloggie")
         ));
+
+        builder.Services.AddDbContext<AuthDbContext>(
+            options => options.UseNpgsql(configuration.GetConnectionString("BloggieAuth")
+        ));
+
+        builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            .AddEntityFrameworkStores<AuthDbContext>();
+
+        builder.Services.Configure<IdentityOptions>(options =>
+        {
+            // Default password settings
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequiredUniqueChars = 1;
+        });
+
+
+
 
         builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
 
@@ -40,6 +62,7 @@ internal static class HostingExtensions
 
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapRazorPages();

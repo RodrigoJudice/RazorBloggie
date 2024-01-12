@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,6 +9,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Bloggie.Web.styles.css" asp-append-version="true" />
+    <link href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css' rel='stylesheet' type='text/css' />
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js'></script>
 </head>
 <body>
     <header>
@@ -35,6 +39,21 @@
                             </ul>
                         </li>
                     </ul>
+                    <div class="d-flex align-items-center">
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            <div class="me-3 text-light">
+                                @User?.Identity?.Name
+                            </div>
+                            <a href="/logout" class="btn bg-light text-dark me-3">Logout</a>
+                        }
+                        else
+                        {
+                            <a href="/login" class="btn bg-light text-dark me-3">Login</a>
+                            <a href="/register" class="btn bg-light text-dark">Register</a>
+                        })
+                        
+                    </div>
                 </div>
             </div>
         </nav>
